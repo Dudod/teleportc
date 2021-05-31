@@ -3,7 +3,8 @@ using System;
 namespace Repository
 {
     public class AirportEntity
-    {   public Guid Id { get; set; }
+    {   
+        public Guid Id { get; set; }
         public string Name { get; set; }
         public double Latitude  { get; set; }
         public double Longitude  { get; set; }
