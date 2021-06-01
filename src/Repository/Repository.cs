@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Data;
-using System.Data.SqlClient;
 using System.Threading.Tasks;
 using Dapper;
+using Npgsql;
 
 namespace Repository
 {
@@ -10,7 +10,7 @@ namespace Repository
     {
         private string _connectionString;
 
-        Repository(string connectionString)
+        public Repository(string connectionString)
         {
             if (string.IsNullOrWhiteSpace(connectionString))
             {
@@ -20,32 +20,33 @@ namespace Repository
             _connectionString = connectionString;
         }
 
-        public Task<AirportEntity> GetAirportAsync(string iataCode)
+        public async Task<AirportEntity> GetAirportAsync(string iataCode)
         {
-            using (IDbConnection connection = new SqlConnection(_connectionString))
-            {
-                var sql = @"SELECT id, name, latitude, longitude, elevation_ft, iata_code, created_at FROM airports
+            using var connection = new NpgsqlConnection(_connectionString);
+            await connection.OpenAsync();
+
+            var sql = @"SELECT id, name, latitude, longitude, elevation_ft, iata_code, created_at FROM airports
                     WHERE iata_code=@iataCode and deleted_at IS NULL";
-                return connection.QueryFirstOrDefaultAsync<AirportEntity>(sql, new { iataCode });
-            }
+
+            return await connection.QueryFirstOrDefaultAsync<AirportEntity>(sql, new { iataCode });
         }
 
-        public Task<Guid> AddAirportAsync(AirportEntity airport)
+        public async Task<Guid> AddAirportAsync(AirportEntity airport)
         {
-            using (IDbConnection connection = new SqlConnection(_connectionString))
-            {
-                var sql = @"INSERT INTO airports(name, latitude, longitude, elevation_ft, iata_code)
-                    VALUES (@Name, @Latitude, @Longitude, @ElevationFt, @IataCode) RETURNING id";
+            using var connection = new NpgsqlConnection(_connectionString);
+            await connection.OpenAsync();
 
-                return connection.ExecuteScalarAsync<Guid>(sql, new 
-                {  
-                    airport.Name,
-                    airport.Latitude,
-                    airport.Longitude,
-                    airport.ElevationFt,
-                    airport.IataCode
-                });
-            }
+            var sql = @"INSERT INTO airports(name, latitude, longitude, elevation_ft, iata_code)
+                    VALUES (@Name, @Latitude, @Longitude, @Elevation_Ft, @Iata_Code) RETURNING id";
+
+            return await connection.ExecuteScalarAsync<Guid>(sql, new
+            {
+                airport.Name,
+                airport.Latitude,
+                airport.Longitude,
+                airport.Elevation_Ft,
+                airport.Iata_Code
+            });
         }
     }
 }

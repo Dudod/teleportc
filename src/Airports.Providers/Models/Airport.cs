@@ -12,7 +12,7 @@ namespace Airports.Providers
         public double ElevationFt { get; set; } //Elevation in foots
         public string IataCode { get; set; }
         public DateTime CreatedAt { get; set; }
-        public DateTime DeletedAt { get; set; }
+        public DateTime? DeletedAt { get; set; }
 
         public Airport(AirportEntity entity)
         {
@@ -20,10 +20,10 @@ namespace Airports.Providers
             Name = entity.Name;
             Latitude = entity.Latitude;
             Longitude = entity.Longitude;
-            ElevationFt = entity.ElevationFt;
-            IataCode = entity.IataCode;
-            CreatedAt = entity.CreatedAt;
-            DeletedAt = entity.DeletedAt;
+            ElevationFt = entity.Elevation_Ft;
+            IataCode = entity.Iata_Code;
+            CreatedAt = entity.Created_At;
+            DeletedAt = entity.Deleted_At;
         }
 
         public Airport(ExternalAirport airport)
@@ -35,18 +35,18 @@ namespace Airports.Providers
             IataCode = airport.IataCode;
         }
 
-        public static AirportEntity ToEntity(this Airport airport)
+        public AirportEntity ToEntity()
         {
-            return airport == default(Airport) ? default(AirportEntity) : new AirportEntity()
+            return  new AirportEntity()
             {
-                Id = airport.Id,
-                Name = airport.Name,
-                Latitude = airport.Latitude,
-                Longitude = airport.Longitude,
-                ElevationFt = airport.ElevationFt,
-                IataCode = airport.IataCode,
-                CreatedAt = airport.CreatedAt,
-                DeletedAt = airport.DeletedAt
+                Id = Id,
+                Name = Name,
+                Latitude = Latitude,
+                Longitude = Longitude,
+                Elevation_Ft = ElevationFt,
+                Iata_Code = IataCode,
+                Created_At = CreatedAt,
+                Deleted_At = DeletedAt
             };
         }
     }

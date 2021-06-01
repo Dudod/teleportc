@@ -9,7 +9,7 @@ namespace Airports.Providers
         private readonly IRepository _repository;
         private readonly IExternalAirportProvider _externalProvider;
 
-        AirportsProvider (IRepository repository, IExternalAirportProvider externalProvider)
+        public AirportsProvider (IRepository repository, IExternalAirportProvider externalProvider)
         {
             _repository = repository;
             _externalProvider = externalProvider;

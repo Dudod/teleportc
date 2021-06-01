@@ -8,9 +8,9 @@ namespace Repository
         public string Name { get; set; }
         public double Latitude  { get; set; }
         public double Longitude  { get; set; }
-        public double ElevationFt { get; set; } //Elevation in foots
-        public string IataCode { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public DateTime DeletedAt { get; set; }
+        public double Elevation_Ft { get; set; } //Elevation in foots
+        public string Iata_Code { get; set; }
+        public DateTime Created_At { get; set; }
+        public DateTime? Deleted_At { get; set; }
     }
 }
