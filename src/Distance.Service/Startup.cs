@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Airports.Providers;
+using Airports.Providers.AirPortCodes;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -30,7 +31,7 @@ namespace Distance.Service
         {
             services.AddSingleton<IRepository, Repository.Repository>(x => new Repository.Repository("Host=localhost;Port=5432;Database=teleportc;Username=postgres;Password=teleportc"));
 
-            services.AddSingleton<IExternalAirportProvider, ExternalAirportProvider>();
+            services.AddSingleton<IExternalAirportProvider, AirPortCodesProvider>();
             services.AddSingleton<IAirportsProvider, AirportsProvider>();
 
             services.AddControllers();
@@ -39,12 +40,12 @@ namespace Distance.Service
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Distance.Service", Version = "v1" });
             });
 
-            services.AddHttpClient<IExternalAirportProvider, ExternalAirportProvider>(c =>
+            services.AddHttpClient<IExternalAirportProvider, AirPortCodesProvider>(c =>
             {
                 c.BaseAddress = new Uri("https://www.air-port-codes.com/api/v1/");
                 c.DefaultRequestHeaders.Add("Accept", "application/json");
                 c.DefaultRequestHeaders.Add("APC-Auth", "822c15ec4f");
-                c.DefaultRequestHeaders.Add("APC-Auth-Secrett", "ac18f88f1b66d90");
+                c.DefaultRequestHeaders.Add("APC-Auth-Secret", "7a16994a3b88ac9");
             });
         }
 

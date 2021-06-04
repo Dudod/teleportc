@@ -14,6 +14,8 @@ namespace Airports.Providers
         public DateTime CreatedAt { get; set; }
         public DateTime? DeletedAt { get; set; }
 
+        public Airport() { }
+
         public Airport(AirportEntity entity)
         {
             Id = entity.Id;
@@ -24,15 +26,6 @@ namespace Airports.Providers
             IataCode = entity.Iata_Code;
             CreatedAt = entity.Created_At;
             DeletedAt = entity.Deleted_At;
-        }
-
-        public Airport(ExternalAirport airport)
-        {
-            Name = airport.Name;
-            Latitude = airport.Latitude;
-            Longitude = airport.Longitude;
-            ElevationFt = airport.Elevation;
-            IataCode = airport.IataCode;
         }
 
         public AirportEntity ToEntity()

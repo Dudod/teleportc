@@ -26,13 +26,11 @@ namespace Airports.Providers
             
             var externalAirport = await _externalProvider.GetAirportAsync(iataCode, cancellationToken);
 
-            if (externalAirport != default(ExternalAirport))
+            if (externalAirport != default(Airport))
             {
-                var airport = new Airport(externalAirport);
+                externalAirport.Id = await _repository.AddAirportAsync(externalAirport.ToEntity());
 
-                airport.Id = await _repository.AddAirportAsync(airport.ToEntity());
-
-                return airport;
+                return externalAirport;
             }
 
             return default;

@@ -1,10 +1,11 @@
-﻿using System.Threading;
+﻿using Airports.Providers.AirPortCodes;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Airports.Providers
 {
     public interface IExternalAirportProvider
     {
-        Task<ExternalAirport> GetAirportAsync(string iataCode, CancellationToken cancellationToken);
+        Task<Airport> GetAirportAsync(string iataCode, CancellationToken cancellationToken);
     }
 }
