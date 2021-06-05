@@ -26,7 +26,7 @@ namespace Airports.Providers.AirPortCodes
 
                 response.EnsureSuccessStatusCode();
 
-                var responseString = await response.Content.ReadAsStringAsync();
+                var responseString = await response.Content.ReadAsStringAsync(cancellationToken);
                 var result = JsonConvert.DeserializeObject<AirPortCodesResponse>(responseString);
 
                 if (result.Status)

@@ -28,12 +28,17 @@ namespace Airports.Providers
 
             if (externalAirport != default(Airport))
             {
-                externalAirport.Id = await _repository.AddAirportAsync(externalAirport.ToEntity());
+                entity = await _repository.AddAirportAsync(externalAirport.ToEntity());
 
-                return externalAirport;
+                return new Airport(entity);
             }
 
             return default;
+        }
+
+        public Task<bool> DeleteAirportAsync(string iataCode)
+        {
+            return _repository.DeleteAirportAsync(iataCode);
         }
     }
 }

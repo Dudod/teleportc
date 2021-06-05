@@ -7,6 +7,7 @@ namespace Distance.Service.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [Produces("application/json")]
     public class AirportController : ControllerBase
     {
         private IAirportsProvider _airportsProvider;
@@ -17,9 +18,31 @@ namespace Distance.Service.Controllers
         }
 
         [HttpGet("{iataCode}")]
-        public Task<Airport> GetAsync(string iataCode)
+        public async Task<ActionResult<Airport>> GetAsync(string iataCode)
         {
-            return _airportsProvider.GetAirportAsync(iataCode, HttpContext?.RequestAborted ?? CancellationToken.None);
+            var airport = await _airportsProvider.GetAirportAsync(iataCode, HttpContext?.RequestAborted ?? CancellationToken.None);
+
+            if(airport != default(Airport))
+            {
+                return Ok(airport);
+            }
+
+            return NotFound();
         }
+
+        [HttpDelete("{iataCode}")]
+        public async Task<IActionResult> DeleteAsync(string iataCode)
+        {
+            var deleted = await _airportsProvider.DeleteAirportAsync(iataCode);
+
+            if (deleted)
+            {
+                return NoContent();
+            }
+
+            return NotFound();
+        }
+
+
     }
 }

@@ -25,28 +25,49 @@ namespace Repository
             using var connection = new NpgsqlConnection(_connectionString);
             await connection.OpenAsync();
 
-            var sql = @"SELECT id, name, latitude, longitude, elevation_ft, iata_code, created_at FROM airports
-                    WHERE iata_code=@iataCode and deleted_at IS NULL";
+            var sql = @"SELECT ""id"", ""name"", ""latitude"", ""longitude"", ""elevation_ft"", ""iata_code"", ""created_at"" FROM public.""airports""
+                WHERE ""iata_code"" = @IataCode and ""deleted_at"" IS NULL;";
 
             return await connection.QueryFirstOrDefaultAsync<AirportEntity>(sql, new { iataCode });
         }
 
-        public async Task<Guid> AddAirportAsync(AirportEntity airport)
+        public async Task<AirportEntity> AddAirportAsync(AirportEntity airport)
         {
             using var connection = new NpgsqlConnection(_connectionString);
             await connection.OpenAsync();
 
-            var sql = @"INSERT INTO airports(name, latitude, longitude, elevation_ft, iata_code)
-                    VALUES (@Name, @Latitude, @Longitude, @Elevation_Ft, @Iata_Code) RETURNING id";
+            var sql = @"INSERT INTO public.""airports""(""name"", ""latitude"", ""longitude"", ""elevation_ft"", ""iata_code"")
+                VALUES(@Name, @Latitude, @Longitude, @Elevation_Ft, @Iata_Code)
+                ON CONFLICT DO NOTHING;
+                SELECT ""id"", ""name"", ""latitude"", ""longitude"", ""elevation_ft"", ""iata_code"", ""created_at"" FROM public.""airports""
+                WHERE ""iata_code"" = @Iata_Code and ""deleted_at"" IS NULL;";
 
-            return await connection.ExecuteScalarAsync<Guid>(sql, new
+            try
             {
-                airport.Name,
-                airport.Latitude,
-                airport.Longitude,
-                airport.Elevation_Ft,
-                airport.Iata_Code
-            });
+                return await connection.QueryFirstOrDefaultAsync<AirportEntity>(sql, new
+                {
+                    airport.Name,
+                    airport.Latitude,
+                    airport.Longitude,
+                    airport.Elevation_Ft,
+                    airport.Iata_Code
+                });
+            }
+            catch(Exception e)
+            {
+                return default;
+            }
+        }
+
+        public async Task<bool> DeleteAirportAsync(string iataCode)
+        {
+            using var connection = new NpgsqlConnection(_connectionString);
+            await connection.OpenAsync();
+
+            var sql = @"UPDATE public.""airports"" SET ""deleted_at"" = timezone('utc'::text, now())
+                WHERE ""iata_code"" = @IataCode and ""deleted_at"" IS NULL;";
+
+            return await connection.ExecuteAsync(sql, new { iataCode }) > 0;
         }
     }
 }

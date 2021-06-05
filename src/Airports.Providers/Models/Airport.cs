@@ -18,14 +18,17 @@ namespace Airports.Providers
 
         public Airport(AirportEntity entity)
         {
-            Id = entity.Id;
-            Name = entity.Name;
-            Latitude = entity.Latitude;
-            Longitude = entity.Longitude;
-            ElevationFt = entity.Elevation_Ft;
-            IataCode = entity.Iata_Code;
-            CreatedAt = entity.Created_At;
-            DeletedAt = entity.Deleted_At;
+            if (entity != null)
+            {
+                Id = entity.Id;
+                Name = entity.Name;
+                Latitude = entity.Latitude;
+                Longitude = entity.Longitude;
+                ElevationFt = entity.Elevation_Ft;
+                IataCode = entity.Iata_Code;
+                CreatedAt = entity.Created_At;
+                DeletedAt = entity.Deleted_At;
+            }
         }
 
         public AirportEntity ToEntity()
