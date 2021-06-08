@@ -1,5 +1,4 @@
-﻿using Airports.Providers.AirPortCodes;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 
 namespace Airports.Providers

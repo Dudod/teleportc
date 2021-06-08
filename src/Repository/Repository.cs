@@ -1,8 +1,7 @@
-﻿using System;
-using System.Data;
-using System.Threading.Tasks;
-using Dapper;
+﻿using Dapper;
 using Npgsql;
+using System;
+using System.Threading.Tasks;
 
 namespace Repository
 {
@@ -53,7 +52,7 @@ namespace Repository
                     airport.Iata_Code
                 });
             }
-            catch(Exception e)
+            catch
             {
                 return default;
             }

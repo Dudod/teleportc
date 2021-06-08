@@ -23,7 +23,7 @@ namespace Airports.Providers
             {
                 return new Airport(entity);
             }
-            
+
             var externalAirport = await _externalProvider.GetAirportAsync(iataCode, cancellationToken);
 
             if (externalAirport != default(Airport))
@@ -34,6 +34,11 @@ namespace Airports.Providers
             }
 
             return default;
+        }
+
+        public Task AddAirportAsync(Airport airport)
+        {
+            return _repository.AddAirportAsync(airport.ToEntity());
         }
 
         public Task<bool> DeleteAirportAsync(string iataCode)

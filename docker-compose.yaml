@@ -1,5 +1,8 @@
 version: '3.8'
 
+networks:
+  teleportc:
+
 services:
 
   db:
@@ -12,4 +15,15 @@ services:
       POSTGRES_PASSWORD: "teleportc" #it must be from vault
     volumes:
         - ./postgres-data:/var/lib/postgresql/data
-      
+    networks:
+        - teleportc
+
+  distance:
+    container_name: distance
+    build:
+      dockerfile: dockerfile
+      context: .
+    ports: 
+      - 5000:80
+    networks:
+      - teleportc
